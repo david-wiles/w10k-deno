@@ -1,13 +1,14 @@
-const server = Deno.listen({port: 8080});
+// Create map to store websocket connections
+const connections = new Map<string, WebSocket>();
 
-const connections = new Map<String, WebSocket>();
-
+// Broadcast to connections at a pre-defined interval
 setInterval(() => {
   const now = new Date();
   connections.forEach((socket) => socket.send("the current time is: " + now));
 }, parseInt(Deno.env.get("PING_INTERVAL") || "10000"));
 
-for await (const conn of server) {
+for await (const conn of Deno.listen({port: 8080})) {
+  // Handle websocket upgrade asynchronously, don't do anything with the result here
   upgradeWebsocket(conn)
 }
 
