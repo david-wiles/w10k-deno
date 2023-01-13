@@ -6,7 +6,7 @@ resource "digitalocean_droplet" "w10k-deno" {
   image      = "ubuntu-22-10-x64"
   name       = "w10k-deno"
   region     = "nyc1"
-  size       = "s-1vcpu-512mb"
+  size       = "s-1vcpu-1gb"
   ssh_keys   = [data.digitalocean_ssh_key.do.id]
   monitoring = true
 
@@ -29,7 +29,7 @@ resource "digitalocean_droplet" "w10k-deno" {
 }
 
 resource "digitalocean_domain" "default" {
-  name       = format("k6client-%d.%s", count.index, var.domain)
-  ip_address = digitalocean_droplet.w10k-deno[count.index].ipv4_address
+  name       = format("w10k-deno.%s", var.domain)
+  ip_address = digitalocean_droplet.w10k-deno.ipv4_address
 }
 
